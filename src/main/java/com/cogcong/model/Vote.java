@@ -9,7 +9,14 @@ import org.json.JSONObject;
 import com.cogcong.mongo.MongoFacade;
 import com.mongodb.client.MongoCollection;
 
-
+/**
+ * Wrapper for the MongoDB SenateVote Object
+ * 
+ * Contains the full outcome of a vote
+ * 
+ * @author Phil
+ *
+ */
 public class Vote {
 	
 	public static final String[] voteTypeNames = new String[]{"Yea", "Nay", "Present", "Not Voting"};

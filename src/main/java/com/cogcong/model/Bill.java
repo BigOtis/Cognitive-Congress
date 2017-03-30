@@ -54,8 +54,8 @@ public class Bill {
 	public List<String> getSubjects(){
 		List<String> ary = (List<String>) billDoc.get("subjects");
 		List<String> strAry = new ArrayList<>();
-		for(int i = 0; i < ary.size(); i++){
-			strAry.add(ary.get(i));
+		for(String subject : ary){
+			strAry.add(subject);
 		}
 		return strAry;
 	}

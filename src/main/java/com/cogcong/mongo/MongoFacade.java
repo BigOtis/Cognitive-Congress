@@ -53,7 +53,6 @@ public class MongoFacade {
 		}
 		mongo = new MongoClient(System.getProperty("mongo.address"), 
 				Integer.valueOf(System.getProperty("mongo.port")));		
-		mongo = new MongoClient("localhost", 27017);
 		db = mongo.getDatabase("CongressDB");
 	}
 	
@@ -125,6 +124,20 @@ public class MongoFacade {
 	public Document getLegislatorByBioID(String bioguide_id){
 		
 		MongoCollection<Document> legislators = db.getCollection("Legislators");
+		FindIterable<Document> results = legislators.find(new Document("id.bioguide", bioguide_id));
+		Document legislator = results.first();
+		
+		return legislator;
+	}
+	
+	/**
+	 * Gets the legislator stats document for the given bioguide_id
+	 * @param bioguide_id
+	 * @return
+	 */
+	public Document getLegislatorStatsByBioID(String bioguide_id){
+		
+		MongoCollection<Document> legislators = db.getCollection("LegislatorStats");
 		FindIterable<Document> results = legislators.find(new Document("id.bioguide", bioguide_id));
 		Document legislator = results.first();
 		

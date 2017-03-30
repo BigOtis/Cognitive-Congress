@@ -1,41 +1,35 @@
 package com.cogcong.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.mongodb.client.MongoCollection;
-
 import com.cogcong.mongo.MongoFacade;
+import com.mongodb.client.MongoCollection;
 
 
 public class Vote {
 	
 	public static final String[] voteTypeNames = new String[]{"Yea", "Nay", "Present", "Not Voting"};
 
-	private Document voteJSON;
+	private Document voteDoc;
 	private Bill bill = null;
 	private MongoFacade mongo = MongoFacade.getInstance();
-	private Map<CharSequence, Integer> billWordFrequency = null;
 	
 	public Vote(Document voteBSON){
-		this.voteJSON = voteBSON;
+		this.voteDoc = voteBSON;
 	}
 	
 	public Vote(JSONObject voteJSON){
-		this.voteJSON = Document.parse(voteJSON.toString());
+		this.voteDoc = Document.parse(voteJSON.toString());
 	}
 	
 	public String getBillName(){
 		Document bill;
 		try{
-			bill = (Document) voteJSON.get("bill");
+			bill = (Document) voteDoc.get("bill");
 		}
 		catch(Exception e){
 			// Not a bill
@@ -56,7 +50,7 @@ public class Vote {
 	public String getBillNumber(){
 		Document bill;
 		try{
-			bill = (Document) voteJSON.get("bill");
+			bill = (Document) voteDoc.get("bill");
 		}
 		catch(Exception e){
 			// Not a bill
@@ -66,29 +60,29 @@ public class Vote {
 	}
 	
 	public String getChamber(){
-		return voteJSON.getString("chamber");
+		return voteDoc.getString("chamber");
 	}
 	
 	public int getVoteNumber(){
-		return voteJSON.getInteger("number");
+		return voteDoc.getInteger("number");
 	}
 	
 	public int getCongressNumber(){
-		return voteJSON.getInteger("congress");
+		return voteDoc.getInteger("congress");
 	}
 	
 	public String getDate(){
-		return voteJSON.getString("date");
+		return voteDoc.getString("date");
 	}
 	
 	public String getVoteID(){
-		return voteJSON.getString("vote_id");
+		return voteDoc.getString("vote_id");
 	}
 	
 	public List<IndividualVote> getIndividualVotes(){
 		
 		List<IndividualVote> votesArray = new ArrayList<>();
-		Document individualVotes = (Document) voteJSON.get("votes");
+		Document individualVotes = (Document) voteDoc.get("votes");
 		for(String type : voteTypeNames){
 			List<Document> ary = (List<Document>) individualVotes.get(type);
 			for(int i = 0; i < ary.size(); i++){
@@ -99,15 +93,15 @@ public class Vote {
 	}
 	
 	public String getSession(){
-		return voteJSON.getString("session");
+		return voteDoc.getString("session");
 	}
 	
 	public String getCongressName(){
-		return voteJSON.getString("chamber") + getCongressNumber();
+		return voteDoc.getString("chamber") + getCongressNumber();
 	}
 	
 	public String getCategory(){
-		return voteJSON.getString("category");
+		return voteDoc.getString("category");
 	}
 	
 	public boolean hasAssociatedBillText(){

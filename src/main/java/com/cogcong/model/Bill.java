@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.cogcong.mongo.MongoFacade;
@@ -17,27 +16,27 @@ import com.cogcong.mongo.MongoFacade.Party;
  */
 public class Bill {
 
-	private Document billJSON;
+	private Document billDoc;
 	
 	public Bill(Document doc){
-		this.billJSON = doc;
+		this.billDoc = doc;
 	}
 	
 	public Bill (JSONObject billJSON){
-		this.billJSON = Document.parse(billJSON.toString());
+		this.billDoc = Document.parse(billJSON.toString());
 	}
 	
 	public String getBillID(){
-		return billJSON.getString("bill_id");
+		return billDoc.getString("bill_id");
 	}
 	
 	public int getCongressNum(){
-		return billJSON.getInteger("congress");
+		return billDoc.getInteger("congress");
 	}
 	
 	public String getTopSubject(){
 		try{
-			return billJSON.getString("subjects_top_term");
+			return billDoc.getString("subjects_top_term");
 		}
 		catch(Exception e){
 			return "";
@@ -45,15 +44,15 @@ public class Bill {
 	}
 	
 	public String getTitle(){
-		return billJSON.getString("official_title");
+		return billDoc.getString("official_title");
 	}
 	
 	public String getPopularTitle(){
-		return billJSON.getString("popular_title");
+		return billDoc.getString("popular_title");
 	}
 	
 	public List<String> getSubjects(){
-		List<String> ary = (List<String>) billJSON.get("subjects");
+		List<String> ary = (List<String>) billDoc.get("subjects");
 		List<String> strAry = new ArrayList<>();
 		for(int i = 0; i < ary.size(); i++){
 			strAry.add(ary.get(i));
@@ -63,7 +62,7 @@ public class Bill {
 	
 	public String getSummaryText(){
 		try{
-			return ((Document) billJSON.get("summary")).getString("text");
+			return ((Document) billDoc.get("summary")).getString("text");
 		}
 		catch(Exception e){
 			System.err.println("No summary text");
@@ -72,19 +71,19 @@ public class Bill {
 	}
 	
 	public String getIntroducedDate(){
-		return billJSON.getString("introduced_at");
+		return billDoc.getString("introduced_at");
 	}
 	
 	public int getNumRepublicanSponsors(){
-		return billJSON.getInteger("rep_sponsors");
+		return billDoc.getInteger("rep_sponsors");
 	}
 	
 	public int getNumDemocraticSponsors(){
-		return billJSON.getInteger("dem_sponsors");
+		return billDoc.getInteger("dem_sponsors");
 
 	}
 	
 	public Party getSponsorParty(){
-		return MongoFacade.getParty(billJSON.getString("sponsor_party"));
+		return MongoFacade.getParty(billDoc.getString("sponsor_party"));
 	}
 }

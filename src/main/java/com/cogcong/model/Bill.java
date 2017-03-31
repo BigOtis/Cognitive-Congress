@@ -1,7 +1,9 @@
 package com.cogcong.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bson.Document;
 import org.json.JSONObject;
@@ -17,13 +19,17 @@ import com.cogcong.mongo.MongoFacade.Party;
 public class Bill {
 
 	private Document billDoc;
+	private Document watsonBill;
+	private MongoFacade mongo = MongoFacade.getInstance();
+	
+	public Bill(String bill_id){
+		this.billDoc = mongo.getBill(bill_id);
+		this.watsonBill = mongo.getWatsonBill(bill_id);
+	}
 	
 	public Bill(Document doc){
 		this.billDoc = doc;
-	}
-	
-	public Bill (JSONObject billJSON){
-		this.billDoc = Document.parse(billJSON.toString());
+		this.watsonBill = mongo.getWatsonBill(getBillID());
 	}
 	
 	public String getBillID(){
@@ -85,5 +91,16 @@ public class Bill {
 	
 	public Party getSponsorParty(){
 		return MongoFacade.getParty(billDoc.getString("sponsor_party"));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getKeywords(){
+		
+		List<Document> keywordsList = (List<Document>) watsonBill.get("keywords");
+		List<String> keywords = new ArrayList<>();
+		for(Document keyword : keywordsList){
+			keywords.add(keyword.getString("text"));
+		}
+		return keywords;
 	}
 }

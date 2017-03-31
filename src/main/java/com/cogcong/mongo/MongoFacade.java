@@ -138,7 +138,7 @@ public class MongoFacade {
 	public Document getLegislatorStatsByBioID(String bioguide_id){
 		
 		MongoCollection<Document> legislators = db.getCollection("LegislatorStats");
-		FindIterable<Document> results = legislators.find(new Document("id.bioguide", bioguide_id));
+		FindIterable<Document> results = legislators.find(new Document("bioguide_id", bioguide_id));
 		Document legislator = results.first();
 		
 		return legislator;
@@ -199,6 +199,14 @@ public class MongoFacade {
 		}
 		
 		return legislatorVoteMap;
+	}
+	
+	public Document getBill(String bill_id){
+		return db.getCollection("SenateBills").find(new Document("bill_id", bill_id)).first();
+	}
+	
+	public Document getWatsonBill(String bill_id){
+		return db.getCollection("WatsonBills").find(new Document("bill_id", bill_id)).first();
 	}
 	
 	public static Party getParty(String party){

@@ -1,4 +1,4 @@
-package wasdev.sample.servlet;
+package com.web.servlet;
 
 import java.io.IOException;
 
@@ -11,17 +11,23 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class SimpleServlet
  */
-@WebServlet("/SimpleServlet")
-public class SimpleServlet extends HttpServlet {
+@WebServlet("/bills/summary/text")
+public class BillSummaryStatsText extends HttpServlet {
+	
     private static final long serialVersionUID = 1L;
+    private static final String address = "BillSummaryText.jsp";
+    		
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
-        response.getWriter().print("Hello World!");
+    	request.getRequestDispatcher(address).forward(request, response);     
     }
-
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	doGet(request, response);
+    }
 }

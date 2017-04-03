@@ -1,5 +1,6 @@
 package com.cogcong.mongo;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class MongoFacade {
         try {
 			System.getProperties().load(new FileInputStream("mongo.properties"));
 		} catch (IOException e) {
+			String myCurrentDir = System.getProperty("user.dir") + File.separator + System.getProperty("sun.java.command") .substring(0, System.getProperty("sun.java.command").lastIndexOf(".")) .replace(".", File.separator); System.out.println(myCurrentDir);
 			System.err.println("MISSING MONGO.PROPERTIES FILE. DB WILL NOT LOAD CORRECTLY.");
 		}
 		mongo = new MongoClient(System.getProperty("mongo.address"), 
@@ -81,6 +83,16 @@ public class MongoFacade {
 			}
 		}
 		return voteObjects;
+	}
+	
+	public List<Bill> queryAllBills(){
+		List<Bill> billList = new ArrayList<>();
+		MongoCollection<Document> collection = db.getCollection("SenateBills");
+		FindIterable<Document> bills = collection.find();
+		for(Document billDoc : bills){
+			billList.add(new Bill(billDoc));
+		}
+		return billList;
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-package wasdev.sample.servlet;
+package com.web.servlet;
 
 import java.io.IOException;
 

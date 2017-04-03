@@ -46,6 +46,13 @@ public class Legislator {
 		update();
 	}
 	
+	public void updateSubjects(Map<String, Integer> subjects){
+		legislatorStats.remove("subjects");
+		legislatorStats.append("subjects", subjects);
+		update();
+	}
+	
+	
 	public List<String> getTopNKeywords(int n){
 		Map<String, Integer> keywords = getKeywords();
 		if(keywords == null){
@@ -65,6 +72,25 @@ public class Legislator {
 		return topWords;
 	}
 	
+	public List<String> getTopNSubjects(int n){
+		Map<String, Integer> subjects = getSubjects();
+		if(subjects == null){
+			return null;
+		}
+		List<String> subjectsList = new ArrayList<>(subjects.keySet());
+		Collections.sort(subjectsList, new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return subjects.get(o2).compareTo(subjects.get(o1));
+			}
+		});
+		List<String> topSubjects = new ArrayList<>();
+		for(int i = 0; i < n && (i+1) < subjectsList.size(); i++){
+			topSubjects.add(subjectsList.get(i) + "(" + subjects.get(subjectsList.get(i)) + ")");
+		}
+		return topSubjects;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public Map<String, Integer> getKeywords(){
 		
@@ -75,6 +101,19 @@ public class Legislator {
 		Map<String, Integer> keywords = new HashMap<>();
 		keywords.putAll((Map) keywordsDoc); 
 		return keywords;
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Integer> getSubjects(){
+		
+		Document subjectsDoc = (Document) legislatorStats.get("subjects");
+		if(subjectsDoc == null){
+			return null;
+		}
+		Map<String, Integer> subjects = new HashMap<>();
+		subjects.putAll((Map) subjectsDoc); 
+		return subjects;
 
 	}
 	

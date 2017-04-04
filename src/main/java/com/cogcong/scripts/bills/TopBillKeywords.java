@@ -1,4 +1,4 @@
-package com.cogcong.scripts;
+package com.cogcong.scripts.bills;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,6 +90,8 @@ public class TopBillKeywords {
 			"person",
 			"congress",
 			"period",
+			"administrator",
+			"provision",
 
 
 	});

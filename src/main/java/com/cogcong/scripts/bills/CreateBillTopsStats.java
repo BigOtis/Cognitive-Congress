@@ -1,4 +1,4 @@
-package com.cogcong.scripts;
+package com.cogcong.scripts.bills;
 
 import java.util.HashMap;
 import java.util.Map;

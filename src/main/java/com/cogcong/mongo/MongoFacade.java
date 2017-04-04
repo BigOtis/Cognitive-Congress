@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +14,7 @@ import org.bson.Document;
 
 import com.cogcong.model.Bill;
 import com.cogcong.model.IndividualVote;
+import com.cogcong.model.Legislator;
 import com.cogcong.model.Vote;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
@@ -93,6 +96,23 @@ public class MongoFacade {
 			billList.add(new Bill(billDoc));
 		}
 		return billList;
+	}
+	
+	public List<Legislator> queryAllLegislators(){
+		List<Legislator> legislatorList = new ArrayList<>();
+		MongoCollection<Document> collection = db.getCollection("Legislators");
+		FindIterable<Document> legislators = collection.find();
+		for(Document legDoc : legislators){
+			legislatorList.add(new Legislator(legDoc));
+		}
+		Collections.sort(legislatorList, new Comparator<Legislator>() {
+			@Override
+			public int compare(Legislator o1, Legislator o2) {
+				return o1.getLastName().compareTo(o2.getLastName());
+			}
+		});
+		
+		return legislatorList;
 	}
 	
 	/**

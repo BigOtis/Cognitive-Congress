@@ -32,6 +32,26 @@ public class Legislator {
 		}
 	}
 	
+	public Legislator(Document legislatorDoc){
+		this.legislatorDoc = legislatorDoc;
+		bioguide_id = ((Document) legislatorDoc.get("id")).getString("bioguide");
+		legislatorStats = facade.getLegislatorStatsByBioID(bioguide_id);
+		if(legislatorStats == null){
+			legislatorStats = new Document("bioguide_id", bioguide_id);
+			facade.db.getCollection("LegislatorStats").insertOne(legislatorStats);
+			legislatorStats = facade.getLegislatorStatsByBioID(bioguide_id);
+		}
+	}
+	
+	public List<String> getMainSponsoredBills(){
+		Object sObj = getDoc().get("main_sponsored_bills");
+		if(sObj instanceof List<?>){
+			return (List<String>) sObj;
+		}
+		return new ArrayList<>();
+	}
+	
+	
 	public List<String> getSponsoredBills(){
 		Object sObj = getDoc().get("sponsored_bills");
 		if(sObj instanceof List<?>){
@@ -52,11 +72,18 @@ public class Legislator {
 		update();
 	}
 	
+	public Integer getKeywordCount(String keyword){
+		return getKeywords().get(keyword);
+	}
+	
+	public Integer getSubjectCount(String subject){
+		return getSubjects().get(subject);
+	}
 	
 	public List<String> getTopNKeywords(int n){
 		Map<String, Integer> keywords = getKeywords();
 		if(keywords == null){
-			return null;
+			return new ArrayList<>();
 		}
 		List<String> words = new ArrayList<>(keywords.keySet());
 		Collections.sort(words, new Comparator<String>() {
@@ -67,7 +94,7 @@ public class Legislator {
 		});
 		List<String> topWords = new ArrayList<>();
 		for(int i = 0; i < n && (i+1) < words.size(); i++){
-			topWords.add(words.get(i) + "(" + keywords.get(words.get(i)) + ")");
+			topWords.add(words.get(i));
 		}
 		return topWords;
 	}
@@ -86,7 +113,7 @@ public class Legislator {
 		});
 		List<String> topSubjects = new ArrayList<>();
 		for(int i = 0; i < n && (i+1) < subjectsList.size(); i++){
-			topSubjects.add(subjectsList.get(i) + "(" + subjects.get(subjectsList.get(i)) + ")");
+			topSubjects.add(subjectsList.get(i));
 		}
 		return topSubjects;
 	}
@@ -136,9 +163,22 @@ public class Legislator {
 		return party;
 	}
 	
+	public String getLatestPartySymbol(){
+		@SuppressWarnings("unchecked")
+		List<Document> terms = (List<Document>) getDoc().get("terms");
+		Document term = terms.get(terms.size()-1);
+		String party = term.getString("party");
+		return "(" + party.substring(0,1) + ")";
+	}
+	
 	public String getName(){
 		Document name = (Document) getDoc().get("name");
 		return name.getString("first") + " " + name.getString("last");
+	}
+	
+	public String getLastName(){
+		Document name = (Document) getDoc().get("name");
+		return name.getString("last");
 	}
 	
 	public Date getBirthday(){

@@ -28,6 +28,18 @@
 </head>
 <body>
 	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<div>
+					  <h1 class="display-3">Bill Overview</h1>
+					  <p class="lead">A summary of the 6.5 thousand bills proposed during the 113th and 114th Senate.</p>
+					  <hr class="my-4">
+				</div>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
+		<div class="row">
 		<div class="col-md-2"></div>
 		<div class="col-md-8">
 		<div><!-- Keyword table -->
@@ -37,7 +49,7 @@
 			    <thead>
 			      <tr>
 			        <th>Key Concept</th>
-			        <th>Overall</th>
+			        <th>Number of Bills</th>
 			      </tr>
 			    </thead>
 			    <tbody>
@@ -73,8 +85,8 @@
 		</div><!-- Subjects table -->
 		<hr></hr>
 		<div><!-- Partisan Keywords table -->
-			<h2> Top Bill Subjects by Party </h2>
-			<p> The top subjects of bills as assigned by the US Congress</p>
+			<h2> Top Bill Keywords by Party </h2>
+			<p> The top keywords/concepts across all proposed bills found by IBM Watson, sorted by political party. </p>
 			<table class="table table-striped table-hover table-bordered">
 			    <thead>
 			      <tr>
@@ -105,7 +117,7 @@
 		<hr></hr>
 		<div><!-- Partisan Subjects table -->
 			<h2> Top Bill Subjects by Party </h2>
-			<p> The top subjects of bills as assigned by the US Congress</p>
+			<p> The top subjects of bills as assigned by the US Congress, sorted by political party.</p>
 			<table class="table table-striped table-hover table-bordered">
 			    <thead>
 			      <tr>
@@ -135,10 +147,17 @@
 		</div><!-- Partisan Subjects table -->
 		</div>
 		<div class="col-md-2"></div>
+		</div>
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<footer>
+				<p>&copy; 2017, Phillip Lopez - pgl5711@rit.edu</p>
+				</footer>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
 	</div>
-	<footer>
-	<p>&copy; 2017, Phillip Lopez</p>
-	</footer>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

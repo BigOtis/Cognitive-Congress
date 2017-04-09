@@ -42,10 +42,14 @@ public class Bill {
 	
 	public String getTopSubject(){
 		try{
-			return billDoc.getString("subjects_top_term");
+			String subject = billDoc.getString("subjects_top_term");
+			if(subject == null){
+				return "None";
+			}
+			return subject;
 		}
 		catch(Exception e){
-			return "";
+			return "None";
 		}
 	}
 	
@@ -54,7 +58,11 @@ public class Bill {
 	}
 	
 	public String getPopularTitle(){
-		return billDoc.getString("popular_title");
+		String title = billDoc.getString("popular_title");
+		if(title == null){
+			return "";
+		}
+		return title;
 	}
 	
 	public List<String> getSubjects(){
@@ -102,5 +110,37 @@ public class Bill {
 			keywords.add(keyword.getString("text"));
 		}
 		return keywords;
+	}
+	
+	public Double getKeywordConfidence(String keyword){
+		
+		List<Document> keywordsList = (List<Document>) watsonBill.get("keywords");
+		for(Document doc : keywordsList){
+			if(doc.getString("text").equals(keyword)){
+				Double val = doc.getDouble("relevance");
+				val = val * 1000;
+				Double dRound = ((double) val.intValue()) / 1000;
+				return dRound;
+			}
+		}
+		return 0.0;
+	}
+	
+	public Legislator getSponsor(){
+		Document sponsor = (Document) billDoc.get("sponsor");
+		Document leg = mongo.getLegislatorByBioID(sponsor.getString("bioguide_id"));
+		return new Legislator(leg);
+	}
+	
+	public List<Legislator> getCosponsors(){
+		List<Legislator> cosponsors = new ArrayList<>();
+		List<Document> docs = (List<Document>) billDoc.get("cosponsors");
+		if(docs != null){
+			for(Document doc : docs){
+				cosponsors.add(new Legislator(
+				mongo.getLegislatorByBioID(doc.getString("bioguide_id"))));
+			}
+		}
+		return cosponsors;
 	}
 }

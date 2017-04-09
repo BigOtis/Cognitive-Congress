@@ -32,7 +32,7 @@
 			<div class="col-md-2"></div>
 			<div class="col-md-8">
 				<div>
-					  <h1 class="display-3">Bill Overview</h1>
+					  <h1 class="display-3">Bills Overview</h1>
 					  <p class="lead">A summary of the 6.5 thousand bills proposed during the 113th and 114th Senate.</p>
 					  <hr class="my-4">
 				</div>

@@ -12,9 +12,10 @@ import java.util.Map;
 
 import org.bson.Document;
 
+import com.cogcong.compare.CompareLegislators;
 import com.cogcong.mongo.MongoFacade;
 
-public class Legislator {
+public class Legislator{
 
 	private MongoFacade facade = MongoFacade.getInstance();
 	private Document legislatorDoc;
@@ -42,6 +43,23 @@ public class Legislator {
 			legislatorStats = facade.getLegislatorStatsByBioID(bioguide_id);
 		}
 	}
+	
+	public List<Legislator> getTop10Similiar(){
+		CompareLegislators cl = new CompareLegislators(this);
+		return cl.getTopSortedLegislators(10);
+	}
+	
+	public List<Legislator> getTop10Different(){
+		CompareLegislators cl = new CompareLegislators(this);
+		return cl.getBottomSortedLegislators(10);
+	}
+	
+	
+	public List<Legislator> getSimiliarLegislators(){
+		CompareLegislators cl = new CompareLegislators(this);
+		return cl.getSortedLegislators();
+	}
+	
 	
 	public List<String> getMainSponsoredBills(){
 		Object sObj = getDoc().get("main_sponsored_bills");
@@ -176,6 +194,12 @@ public class Legislator {
 		return name.getString("first") + " " + name.getString("last");
 	}
 	
+	public String getShortName(){
+		Document name = (Document) getDoc().get("name");
+		return name.getString("first").substring(0, 1) + " " + name.getString("last");
+	}
+	
+	
 	public String getLastName(){
 		Document name = (Document) getDoc().get("name");
 		return name.getString("last");
@@ -214,4 +238,49 @@ public class Legislator {
 				new Document("_id", legislatorStats.get("_id")), legislatorStats);
 	}
 	
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof Legislator){
+			Legislator that = (Legislator) o;
+			return this.getDoc().get("_id").equals(that.getDoc().get("_id"));
+		}
+		return false;
+	}
+	
+	public Double distanceTo(Legislator l2){
+		
+		Double dist = 0.0;
+//		CosineSimilarity cs = new CosineSimilarity();
+//		
+//		Map<CharSequence, Integer> l1Words = toCharMap(this.getKeywords());
+//		Map<CharSequence, Integer> l2Words = toCharMap(l2.getKeywords());
+//		dist = cs.cosineSimilarity(l1Words, l2Words);
+
+		Map<String, Integer> l1Words = this.getKeywords();
+		Map<String, Integer> l2Words = l2.getKeywords();
+				
+		for(String word : l1Words.keySet()){
+			if(l2Words.containsKey(word)){
+				dist += Math.min(l1Words.get(word), l2Words.get(word));
+			}
+			else{
+				dist -= 1;
+			}
+		}
+		for(String word : l2Words.keySet()){
+			if(!l1Words.containsKey(word)){
+				dist -= 1;
+			}
+		}
+		
+		return dist;
+	}
+	
+	public Map<CharSequence, Integer> toCharMap(Map<String, Integer> map){
+		Map<CharSequence, Integer> newMap = new HashMap<>();
+		for(String key : map.keySet()){
+			newMap.put(key, map.get(key));
+		}
+		return newMap;
+	}
 }

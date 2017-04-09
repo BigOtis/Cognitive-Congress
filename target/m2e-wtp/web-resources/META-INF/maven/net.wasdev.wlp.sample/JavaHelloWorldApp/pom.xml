@@ -42,8 +42,7 @@
             <artifactId>geronimo-servlet_3.0_spec</artifactId>
             <scope>provided</scope>
         </dependency>
-        
-        	<dependency>
+  	<dependency>
     	<groupId>org.json</groupId>
     	<artifactId>json</artifactId>
     	<version>20140107</version>
@@ -68,6 +67,11 @@
     	<groupId>com.ibm.watson.developer_cloud</groupId>
     	<artifactId>java-sdk</artifactId>
     	<version>3.6.0</version>
+	</dependency>
+	<dependency>
+   	 	<groupId>org.apache.commons</groupId>
+    	<artifactId>commons-text</artifactId>
+    	<version>1.0</version>
 	</dependency>
     </dependencies>
 

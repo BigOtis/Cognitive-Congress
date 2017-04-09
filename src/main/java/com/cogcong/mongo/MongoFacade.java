@@ -91,9 +91,24 @@ public class MongoFacade {
 	public List<Bill> queryAllBills(){
 		List<Bill> billList = new ArrayList<>();
 		MongoCollection<Document> collection = db.getCollection("SenateBills");
-		FindIterable<Document> bills = collection.find();
+		FindIterable<Document> bills = collection.find().sort(new Document("introduced_at", -1));
 		for(Document billDoc : bills){
 			billList.add(new Bill(billDoc));
+		}
+		return billList;
+	}
+	
+	public List<Bill> queryAllBills(int count){
+		List<Bill> billList = new ArrayList<>();
+		MongoCollection<Document> collection = db.getCollection("SenateBills");
+		FindIterable<Document> bills = collection.find().sort(new Document("introduced_at", -1));
+		int i = 0;
+		for(Document billDoc : bills){
+			if(i >= count){
+				continue;
+			}
+			billList.add(new Bill(billDoc));
+			i++;
 		}
 		return billList;
 	}

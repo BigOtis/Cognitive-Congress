@@ -76,6 +76,23 @@
 			    </tbody>
 			</table>
 			<hr></hr>
+			<h1> Comparison to Other Legislators <button class="btn" data-toggle="collapse" data-target="#demo">Show</button></h1>
+			<div id="demo" class="collapse">
+			<h3> Most Similar </h3>
+			<p>
+			<%for(Legislator leg : legislator.getTop10Similiar()){%>
+				<%=leg.getName() + " " + leg.getLatestPartySymbol() + ": " + legislator.distanceTo(leg)%>, 
+			<%}%>
+			</p>
+			<h3> Least Similar </h3>
+			<p>
+			<%for(Legislator leg : legislator.getTop10Different()){%>
+				<%=leg.getName() + " " + leg.getLatestPartySymbol() + ": " + legislator.distanceTo(leg)%>, 
+			<%}%>
+			</p>
+			</div>
+			
+			<hr></hr>
 			<h1> Sponsored Bills <button class="btn" data-toggle="collapse" data-target="#demo">Show</button> </h1>
 			<h4> <%=legislator.getLastName()%> has sponsored <%=bills.size()%> bills during the 113th and 114th Congress.</h4>
 			<div id="demo" class="collapse">

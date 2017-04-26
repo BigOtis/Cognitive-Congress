@@ -19,7 +19,7 @@ public class Legislator{
 
 	private MongoFacade facade = MongoFacade.getInstance();
 	private Document legislatorDoc;
-	private Document legislatorStats;
+	public Document legislatorStats;
 	private String bioguide_id;
 	
 	public Legislator(String bioguide_id){
@@ -45,11 +45,27 @@ public class Legislator{
 	}
 	
 	public List<Legislator> getTop10Similiar(){
+		List<String> sim = (List<String>) legislatorStats.get("topSimilar");
+		if(sim != null){
+			List<Legislator> legs = new ArrayList<>();
+			for(String id : sim){
+				legs.add(new Legislator(id));
+			}
+			return legs;
+		}
 		CompareLegislators cl = new CompareLegislators(this);
 		return cl.getTopSortedLegislators(10);
 	}
 	
 	public List<Legislator> getTop10Different(){
+		List<String> sim = (List<String>) legislatorStats.get("topDifferent");
+		if(sim != null){
+			List<Legislator> legs = new ArrayList<>();
+			for(String id : sim){
+				legs.add(new Legislator(id));
+			}
+			return legs;
+		}
 		CompareLegislators cl = new CompareLegislators(this);
 		return cl.getBottomSortedLegislators(10);
 	}

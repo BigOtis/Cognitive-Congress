@@ -1,13 +1,11 @@
 package com.cogcong.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bson.Document;
-import org.json.JSONObject;
 
+import com.cogcong.compare.CompareBills;
 import com.cogcong.mongo.MongoFacade;
 import com.cogcong.mongo.MongoFacade.Party;
 
@@ -142,5 +140,43 @@ public class Bill {
 			}
 		}
 		return cosponsors;
+	}
+	
+	public Document getEmotion(){
+		return (Document) ((Document) watsonBill.get("emotion")).get("emotion");
+	}
+	
+	public String getSentimentLabel(){
+		Document sentiment = (Document) watsonBill.get("sentiment");
+		return sentiment.getString("label");
+	}
+	
+	public Double getSentimentScore(){
+		Document sentiment = (Document) watsonBill.get("sentiment");
+		return sentiment.getDouble("score");
+	}
+	
+	public List<String> getSimilarBills(){
+		List<String> sim = (List<String>) billDoc.get("similarBills");
+		if(sim != null){
+			sim.remove(0);
+		}
+		return sim;
+	}
+	
+	public Double distanceTo(Bill that){
+		
+		Double distance = 0.0;
+		List<String> thatKW = that.getKeywords();
+		for(String keyword : this.getKeywords()){
+			if(thatKW.contains(keyword)){
+				distance += 5;
+			}
+			else{
+				distance -= .1;
+			}
+		}
+		
+		return distance;
 	}
 }

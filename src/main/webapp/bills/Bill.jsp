@@ -1,4 +1,5 @@
-<!DOCTYPE HTML><%@page import="com.cogcong.model.Bill"%>
+<!DOCTYPE HTML><%@page import="org.apache.commons.lang3.text.WordUtils"%>
+<%@page import="com.cogcong.model.Bill"%>
 <%@page import="com.cogcong.model.Legislator"%>
 <%@page import="java.util.List"%>
 <%@page import="com.cogcong.stats.BillStats"%>
@@ -18,10 +19,33 @@
 	%>
 	<!--  Bootstrap -->
 	<link href="<%=baseURL%>bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="icon" href="<%=baseURL%>img/seal.png">
 	<title><%= bill.getBillID() %></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
+      <!-- Static navbar -->
+      <nav class="navbar navbar-default">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><img src="<%=baseURL%>img/flagsmall1.JPG	" alt="US Congress Seal" style="width:50px;height:25px"></a>
+            <a class="navbar-brand" href="<%=baseURL%>">Explore the U.S. Senate</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="<%=baseURL%>legislator/index">Senators</a></li>
+              <li class="active"><a href="<%=baseURL%>bills/index">Bills<span class="sr-only">(current)</span></a></li>
+              <li><a href="<%=baseURL%>bills/summary/text">Summary</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+    </nav>
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-2"></div>
@@ -64,7 +88,7 @@
 			    <tbody>
 			    <%for (int i = 0; i < count; i++){ %>
 			      <tr>
-			        <td><%= keywords.get(i)%></td>
+			        <td><%= WordUtils.capitalize(keywords.get(i))%></td>
 			        <td><%= bill.getKeywordConfidence(keywords.get(i))%></td>
 			      </tr>
 			    <%} %>
@@ -111,7 +135,7 @@
 			        <td><a href="<%=baseURL%>bill<%="?id="+rbill.getBillID()%>"><%= rbill.getBillID()%></a></td>
 			        <td><%= leg.getShortName() + " " + leg.getLatestPartySymbol()%></td>
 			        <td><%= rbill.getTitle()%></td>
-			        <td><%= rbill.getKeywords().get(0) %></td>
+			        <td><%= WordUtils.capitalize(rbill.getKeywords().get(0)) %></td>
 			      </tr>
 			    <%} %>
 			    </tbody>

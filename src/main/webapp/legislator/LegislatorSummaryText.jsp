@@ -1,4 +1,5 @@
-<!DOCTYPE HTML><%@page import="com.cogcong.model.Legislator"%>
+<!DOCTYPE HTML><%@page import="org.apache.commons.lang3.text.WordUtils"%>
+<%@page import="com.cogcong.model.Legislator"%>
 <%@page import="java.util.List"%>
 <%@page import="com.cogcong.stats.BillStats"%>
 <%@page language="java"
@@ -18,10 +19,11 @@
 	%>
 	<!--  Bootstrap -->
 	<link href="<%=baseURL%>bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="icon" href="<%=baseURL%>img/seal.png">
 	<title><%=legislator.getName()%></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
+    <script type="text/javascript">    
 
       // Load the Visualization API and the corechart package.
       google.charts.load('current', {'packages':['corechart']});
@@ -41,15 +43,16 @@
         data.addRows([
         <% 	int j = 0;
         	for(String keyword: keywords){ %>
-        	<%= "['" + keyword + "', " + 
+        	<%= "['" + WordUtils.capitalize(keyword) + "', " + 
           		legislator.getKeywordCount(keywords.get(j++))  +  "],"%>
         <% } %>
         ]);
 
         // Set chart options
-        var options = {'title': 'Top <%= count %> Watson Keywords',
+        var options = {'title': '<%= legislator.getName() + ": "%><%= count %> Watson Keywords',
                        'width':1000,
-                       'height': 400};
+                       'height': 400,
+                       colors: ['<%= legislator.getPartyColor()%>']};
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
@@ -58,6 +61,28 @@
     </script>
 </head>
 <body>
+      <!-- Static navbar -->
+      <nav class="navbar navbar-default">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><img src="<%=baseURL%>img/flagsmall1.JPG	" alt="US Congress Seal" style="width:50px;height:25px"></a>
+            <a class="navbar-brand" href="<%=baseURL%>">Explore the U.S. Senate</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li class="active"><a href="./">Senators <span class="sr-only">(current)</span></a></li>
+              <li><a href="<%=baseURL%>bills/index">Bills</a></li>
+              <li><a href="<%=baseURL%>bills/summary/text">Summary</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+    </nav>
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-2"></div>
@@ -73,7 +98,7 @@
 		<div class="row">
 			<div class="col-md-2"></div>
 			<div class="col-md-8">
-			<div id="chart_div"></div>		
+			<div id="chart_div"></div>	
 			<hr></hr>
 			<h1> Comparison to Other Legislators <button class="btn" data-toggle="collapse" data-target="#sim">Show</button></h1>
 			<div id="sim" class="collapse">
@@ -81,7 +106,7 @@
 			<p>
 			<%for(Legislator leg : legislator.getTop10Similiar()){%>
 				<a href="<%=baseURL%>legislator<%="?id="+leg.getBioguide_id()%>">
-				<%=leg.getName() + " " + leg.getLatestPartySymbol() + ": " + legislator.distanceTo(leg)%>
+				<%=leg.getName() + " " + leg.getLatestPartySymbol()%>
 				</a>, 
 			<%}%>
 			</p>
@@ -89,7 +114,7 @@
 			<p>
 			<%for(Legislator leg : legislator.getTop10Different()){%>
 				<a href="<%=baseURL%>legislator<%="?id="+leg.getBioguide_id()%>">
-				<%=leg.getName() + " " + leg.getLatestPartySymbol() + ": " + legislator.distanceTo(leg)%>
+				<%=leg.getName() + " " + leg.getLatestPartySymbol()%>
 				</a>, 
 			<%}%>
 			</p>

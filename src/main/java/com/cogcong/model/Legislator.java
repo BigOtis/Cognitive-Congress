@@ -292,6 +292,19 @@ public class Legislator{
 		return dist;
 	}
 	
+	public String getPartyColor(){
+		String party = getLatestParty();
+		if("Republican".equals(party)){
+			return "red";
+		}
+		else if("Democrat".equals(party)){
+			return "blue";
+		}
+		else{
+			return "purple";
+		}
+	}
+	
 	public Map<CharSequence, Integer> toCharMap(Map<String, Integer> map){
 		Map<CharSequence, Integer> newMap = new HashMap<>();
 		for(String key : map.keySet()){
